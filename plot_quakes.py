@@ -40,17 +40,22 @@ def plot_quakes():
     # Scale magnitude for better visibility
     sizes = (df['magnitude'] - 4.0) * 100
     
+    # Fix negative depth values (EMSC uses negative for fixed/default depths)
+    depths = df['depth_km'].abs().clip(0, 5)
+    
     scatter = ax.scatter(
         df['longitude'], df['latitude'],
         s=sizes,
-        c=df['depth_km'],
+        c=depths,
         cmap='plasma_r', # plasma_r: shallow is bright/warm, deep is cool
+        vmin=0, vmax=5,  # Fixed colorbar range
         alpha=0.7,
         edgecolors='black',
         linewidth=0.5,
         transform=ccrs.PlateCarree(),
         label='Earthquakes'
     )
+
 
     # Add colorbar for depth
     cbar = plt.colorbar(scatter, ax=ax, orientation='vertical', pad=0.02, aspect=30)

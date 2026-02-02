@@ -272,7 +272,10 @@ def main():
         for row in unique_data:
             out_row = row.copy()
             out_row["time"] = row["time"].strftime('%Y-%m-%d %H:%M:%S')
+            # Standardize depth to positive 0-5km
+            out_row["depth_km"] = min(max(abs(row["depth_km"]), 0), 5)
             dict_writer.writerow(out_row)
+
     
     print(f"\n✓ Saved {len(unique_data)} records to {csv_file}")
     print("="*60)
